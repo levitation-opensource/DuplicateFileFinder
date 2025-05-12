@@ -56,6 +56,7 @@ namespace DuplicateFileFinder
             //An optional fourth argument: "try-run" which will skip the actual moving/linking steps.
             if (args.Length < 3)
             {
+                Console.WriteLine("A tool that detects duplicate files and replaces them with symlinks to a shared file in a special shared files folder.");
                 Console.WriteLine("Usage: DuplicateFileFinder.exe <minSizeBytes> <directoryToScan> <sharedDirectory> [<hashCacheRoot>] [try-run]");
                 Console.WriteLine("Example: DuplicateFileFinder.exe 1000000 C:\\ C:\\___SharedDuplicates C:\\ try-run");
                 Console.WriteLine("When hashCacheRoot argument is omitted then hash cache is disabled.");
@@ -1370,7 +1371,17 @@ namespace DuplicateFileFinder
                     if (allFileAttributes.AccessTime.HasValue)
                         File.SetLastAccessTimeUtc(targetFilePath, allFileAttributes.AccessTime.Value);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to set time attributes on symbolic link '{targetFilePath}': {ex.Message}");
 
+                //NB! this error is only logged and has no effect otherwise
+            }
+
+            //NB! even when setting time attributes fails above, setting the following attributes often succeeds
+            try 
+            { 
                 if (allFileAttributes.Attributes.HasValue)
                     File.SetAttributes(targetFilePath, allFileAttributes.Attributes.Value);
 

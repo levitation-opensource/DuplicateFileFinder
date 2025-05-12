@@ -1,5 +1,7 @@
 ## Duplicate file finder and de-duplicator
 
+A tool that detects duplicate files and replaces them with symlinks to a shared file in a special shared files folder.
+
 Usage: 
 <br>`DuplicateFileFinder.exe <minSizeBytes> <directoryToScan> <sharedDirectory> [<hashCacheRoot>] [try-run]`
 
